@@ -43,7 +43,7 @@ function shuffleFisherYates(arr = []) {
     i++;
   }
   for (let i = arr.length - 1; i > 0; i--) {
-    const rand = getRandom(0, i, true)
+    const rand = getRandom(0, i + 1, true)
     const value = result[rand];
     result[rand] = result[i]
     result[i] = value;
