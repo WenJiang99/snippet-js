@@ -22,6 +22,36 @@ function getType(value) {
 
 对于基本的数据类型，需要通过 `new` 方式创建才能正确判断。
 
+### 原理
+
+`instanceof` 是通过在*原型链* 上一个一个的查找，`Ctor` 的原型对象是否在`instance` 的原型链上。查找的过程会一直沿着原型链往上找，直到原型对象为`null` 才停止，如果整个原型链上都没找到 `Ctor` 的原型对象，则认为`instance` 不是`Ctor` 的实例
+
+### 原理实现
+
+我们可以自己尝试实现 `instanceof` ，只需要对`instance`的原型链进行遍历，直到原型链顶端，如果都没找到，则返回`false`
+
+```js
+function myInstanceof(instance, ctor) {
+  if (
+    (instance === null || instance === undefined) ||
+    (ctor === null || ctor === undefined)
+  ) {
+    return false
+  }
+  const prototype = ctor.prototype;
+  let proto = instance.__proto__
+  while (1) {
+    if (proto === null || proto === undefined) {
+      return false;
+    }
+    if (proto === prototype) {
+      return true;
+    }
+    proto = proto.__proto__
+  }
+}
+```
+
 
 
 ## toString
@@ -49,4 +79,6 @@ const NUMBER_TAG = toTag('Number')
 const STRING_TAG = toTag('String')
 // ... 
 ```
+
+
 

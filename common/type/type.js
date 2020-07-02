@@ -30,3 +30,27 @@ log(byTypeOf(1, 'number')) // true
 log(byInstanceOf(1, Number)) // false
 log(byInstanceOf(new Number(1), Number)) // true
 log(byObjectToString(1, NUMBER_TAG)) // true
+
+
+function myInstanceof(instance, ctor) {
+  if (
+    (instance === null || instance === undefined) ||
+    (ctor === null || ctor === undefined)
+  ) {
+    return false
+  }
+  const prototype = ctor.prototype;
+  let proto = instance.__proto__
+  while (1) {
+    if (proto === null || proto === undefined) {
+      return false;
+    }
+    if (proto === prototype) {
+      return true;
+    }
+    proto = proto.__proto__
+  }
+}
+
+log(myInstanceof(1, Number)) // true
+log(myInstanceof(new Number(1), Number)) // true
