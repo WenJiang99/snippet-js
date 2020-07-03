@@ -1,0 +1,1 @@
+具体请查看 [javascript函数绑定](./../bind/README.md)
