@@ -13,7 +13,7 @@ function debounce(fn, timeout, options = {}) {
     }
     timer = setTimeout(
       () => {
-        timer = null;
+        // timer = null;
         return fn.call(thisArg, ...args)
       },
       _timeout

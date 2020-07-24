@@ -17,7 +17,7 @@ function throttle(fn, timeout, options = {}) {
       timer = setTimeout(() => {
         const res = fn.call(thisArg, ...args)
         lastInvoke = Date.now();
-        timer = null;
+        // timer = null;
         return res;
       }, remainingTime)
     }
