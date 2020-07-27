@@ -54,3 +54,20 @@ function myInstanceof(instance, ctor) {
 
 log(myInstanceof(1, Number)) // true
 log(myInstanceof(new Number(1), Number)) // true
+
+const methods = {
+  toString: {
+    value: function () {
+      return '888'
+    }
+  },
+  valueOf: {
+    value: function () {
+      return {};
+    }
+  }
+}
+
+const obj = Object.create(null, methods)
+
+console.log(Number(obj)) // 888
