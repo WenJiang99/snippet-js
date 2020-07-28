@@ -144,9 +144,15 @@ MyPromise.resolve = function (value) {
   })
 }
 
+MyPromise.reject = function (err) {
+  return new MyPromise((resolve, reject) => {
+    reject(err)
+  })
+}
+
 MyPromise.all = function (promiseList = []) {
   const promises = Array.from(promiseList)
-  return new Promise((resolve, reject) => {
+  return new MyPromise((resolve, reject) => {
     let index = 0;
     const result = []
     if (promises.length === 0) {
@@ -167,12 +173,36 @@ MyPromise.all = function (promiseList = []) {
               reject(err)
               return
             }
-          )
+          );
       }
     }
   })
 }
 
+MyPromise.race = function (promiseList) {
+  const promises = Array.from(promiseList)
+  return new MyPromise((resolve, reject) => {
+    if (promises.length === 0) {
+      return;
+    }
+    else {
+      for (let i = 0; i < promises.length; i++) {
+        MyPromise
+          .resolve(promises[i])
+          .then(
+            value => {
+              resolve(value)
+              return;
+            },
+            err => {
+              reject(err)
+              return;
+            }
+          );
+      }
+    }
+  })
+}
 
 MyPromise.defer = MyPromise.deferred = function () {
   let dfd = {};

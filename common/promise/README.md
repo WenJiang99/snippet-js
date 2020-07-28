@@ -99,7 +99,7 @@ function reject(value) {
 }
 ```
 
-### then
+### Promise.ptototype.then
 
 `promise.then(onFulfilled,onRejected)`
 
@@ -406,6 +406,18 @@ MyPromise.resolve = function (value) {
 
 
 
+### Promise.reject
+
+`Promise.reject`方法用来将一个值包装成一个`rejected`状态的promise实例
+
+```js
+MyPromise.reject = function (err) {
+  return new MyPromise((resolve, reject) => {
+    reject(err)
+  })
+}
+```
+
 ### Promise.all
 
 `Promise.all`是定义在`Promise`上的静态方法，用于将多个promise实例包装成一个新的Promise实例。
@@ -419,9 +431,9 @@ MyPromise.resolve = function (value) {
 但是只要其中的一个promise状态变成`rejected`，新的promise实例状态就马上变成`rejected`，此时第一个被reject的promise实例的返回值会作为新的promise的`onRejected`的参数值。
 
 ```js
-MyPromise.all = function (promiseList) {
+MyPromise.all = function (promiseList = []) {
   const promises = Array.from(promiseList)
-  return new Promise((resolve, reject) => {
+  return new MyPromise((resolve, reject) => {
     let index = 0;
     const result = []
     if (promises.length === 0) {
@@ -442,14 +454,51 @@ MyPromise.all = function (promiseList) {
               reject(err)
               return
             }
-          )
+          );
       }
     }
   })
 }
 ```
 
+上面代码实现中，先将传入的每个值调用`Promise.resolve`方法转换成一个promise实例，然后在其`then`回调中，如果promise是转变成`fulfilled` 状态，则将结果存到数组中，一直等到数组的长度和传入的promise个数相等时候才调用新的promise的`resolve`方法，改变新的promise的状态。而如果某个promise状态变成`rejected`，在对应的`then`回调中，就会调用到新的promise的`reject`方法，直接将新的promise状态变成`rejected`
 
+### Promise.race
+
+`Promise.race`方法也是接受一个迭代器，将多个promise实例，包装得到一个新的promise实例。
+
+`Promise.race`方法接收的多个promise实例，只要**其中一个**状态发生改变，返回的新的promise状态就改变。第一个状态改变的promise的返回值就是新的promise实例的返回值。
+
+同样，对于传入的不是promise实例的话，会调用`Promise.resolve`方法转换成一个promise实例。
+
+```js
+MyPromise.race = function (promiseList) {
+  const promises = Array.from(promiseList)
+  return new MyPromise((resolve, reject) => {
+    if (promises.length === 0) {
+      return;
+    }
+    else {
+      for (let i = 0; i < promises.length; i++) {
+        MyPromise
+          .resolve(promises[i])
+          .then(
+            value => {
+              resolve(value)
+              return;
+            },
+            err => {
+              reject(err)
+              return;
+            }
+          );
+      }
+    }
+  })
+}
+```
+
+上面代码实现中，先将每个传入的值调用`Promise.resolve`转换成一个promise实例，然后在`then`方法中，当其中一个promise实例的状态发生改变时候，就会执行`then`回调，进而执行新的promise的`resolve`或者`reject`函数，改变其状态。
 
 ### 测试
 
@@ -625,4 +674,3 @@ module.exports = MyPromise;
 - [掘金-Promise的源码实现（完美符合Promise/A+规范）](https://juejin.im/post/5c88e427f265da2d8d6a1c84)
 - [Promise A+规范](https://promisesaplus.com/)
 - [es6入门-Promise](https://es6.ruanyifeng.com/#docs/promise)
-
