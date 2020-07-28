@@ -127,6 +127,53 @@ function resolvePromise(promise2, x, resolve, reject) {
   }
 }
 
+MyPromise.resolve = function (value) {
+
+  if (value instanceof MyPromise) {
+    return value;
+  }
+  return new MyPromise((resolve, reject) => {
+
+    if (value && (typeof value === 'object' || typeof value === 'function') && typeof value.then === 'function') {
+      setTimeout(() => {
+        value.then(resolve, reject)
+      }, 0)
+    } else {
+      resolve(value)
+    }
+  })
+}
+
+MyPromise.all = function (promiseList = []) {
+  const promises = Array.from(promiseList)
+  return new Promise((resolve, reject) => {
+    let index = 0;
+    const result = []
+    if (promises.length === 0) {
+      resolve(result)
+    }
+    else {
+      for (let i = 0; i < promises.length; i++) {
+        MyPromise
+          .resolve(promises[i])
+          .then(
+            value => {
+              result[index++] = value;
+              if (index >= promises.length) {
+                resolve(result)
+              }
+            },
+            err => {
+              reject(err)
+              return
+            }
+          )
+      }
+    }
+  })
+}
+
+
 MyPromise.defer = MyPromise.deferred = function () {
   let dfd = {};
   dfd.promise = new MyPromise((resolve, reject) => {

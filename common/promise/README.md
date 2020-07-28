@@ -1,4 +1,4 @@
-# 手写 Promise
+# JavaScript Promise
 
 ## 实现
 
@@ -380,6 +380,77 @@ MyPromise.prototype.then = function (onFulfilled, onRejected) {
 
 ```
 
+### Promise.resolve
+
+`Promise.resolve`方法用于将当前对象转换成一个`Promise`对象。
+
+如果传入的参数是一个`promise`，则`Promise.resolve`方法不对其进行修改，而是直接返回这个实例（可以参考上面的实现）
+
+```js
+MyPromise.resolve = function (value) {
+  if (value instanceof MyPromise) {
+    return value;
+  }
+  return new MyPromise((resolve, reject) => {
+
+   if (value && (typeof value === 'object' || typeof value === 'function') && typeof value.then === 'function') {
+      setTimeout(() => {
+        value.then(resolve, reject)
+      }, 0)
+    } else {
+      resolve(value)
+    }
+  })
+}
+```
+
+
+
+### Promise.all
+
+`Promise.all`是定义在`Promise`上的静态方法，用于将多个promise实例包装成一个新的Promise实例。
+
+`Promise.all`方法接收一个迭代器作为参数，参数需要有一个`Iterator`接口，可以通过`for ... of`来遍历。
+
+迭代器中的每一项应该是一个promise实例，如果传入的一些不是promise实例，则会通过`Promise.resolve`来将其转换成promise实例。
+
+在迭代器中的每一个promise都变成了`fulfilled`状态后，`Promise.all`方法返回的新的promise实例的状态才会变成`fulfilled`，此时这些promise实例的返回值会组成一个数组，作为新的promise实例的`then`方法中`onFulfilled`的参数值。
+
+但是只要其中的一个promise状态变成`rejected`，新的promise实例状态就马上变成`rejected`，此时第一个被reject的promise实例的返回值会作为新的promise的`onRejected`的参数值。
+
+```js
+MyPromise.all = function (promiseList) {
+  const promises = Array.from(promiseList)
+  return new Promise((resolve, reject) => {
+    let index = 0;
+    const result = []
+    if (promises.length === 0) {
+      resolve(result)
+    }
+    else {
+      for (let i = 0; i < promises.length; i++) {
+        MyPromise
+          .resolve(promises[i])
+          .then(
+            value => {
+              result[index++] = value;
+              if (index >= promises.length) {
+                resolve(result)
+              }
+            },
+            err => {
+              reject(err)
+              return
+            }
+          )
+      }
+    }
+  })
+}
+```
+
+
+
 ### 测试
 
 `npm install -g promises-aplus-tests`安装测试脚本
@@ -553,3 +624,5 @@ module.exports = MyPromise;
 - [掘金-可能是目前最易理解的手写promise](https://juejin.im/post/5dc383bdf265da4d2d1f6b23)
 - [掘金-Promise的源码实现（完美符合Promise/A+规范）](https://juejin.im/post/5c88e427f265da2d8d6a1c84)
 - [Promise A+规范](https://promisesaplus.com/)
+- [es6入门-Promise](https://es6.ruanyifeng.com/#docs/promise)
+
