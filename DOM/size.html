@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        html,
+        body {
+            border: 0;
+            margin: 0;
+            padding: 0;
+        }
+
+        #root {
+            margin: 50px;
+            border: 1px solid #000;
+        }
+
+        #offset {
+            width: 500px;
+            height: 400px;
+            background-color: red;
+            margin: 20px;
+            padding: 20px;
+            border: 5px solid #000;
+            box-sizing: content-box;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root">
+        <div id="offset">
+            offset size
+        </div>
+    </div>
+
+    <script>
+        const offsetDiv = document.getElementById('offset')
+        const { clientHeight, clientWidth, clientLeft, clientTop } = offsetDiv;
+        console.log({ clientHeight, clientWidth, clientLeft, clientTop })
+    </script>
+</body>
+
+</html>
