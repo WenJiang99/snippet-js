@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .container {
+      width: 400px;
+      height: 200px;
+      margin: 20px;
+    }
+
+    .header,
+    .content {
+      width: 50%;
+      height: 40%;
+    }
+
+    div {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    container
+    <div class="header">
+      header
+    </div>
+    <div class="content">
+      content
+    </div>
+  </div>
+
+  <div class="container">
+    container
+    <div class="header">
+      header
+    </div>
+    <div class="content">
+      content
+    </div>
+  </div>
+
+  <input type="color" name="" id="color">
+  <button id="container">container</button>
+  <button id="content">content</button>
+  <button id="header">header</button>
+</body>
+<script>
+  const containerBtn = document.getElementById('container')
+  const contentBtn = document.getElementById('content')
+  const headerBtn = document.getElementById('header')
+  containerBtn.onclick = contentBtn.onclick = headerBtn.onclick = function (e) {
+    const color = document.getElementById('color').value;
+    const id = e.target.id;
+    const selector = `.${id}`;
+    const divList = document.querySelectorAll(selector)
+    for (let i = 0; i < divList.length; i++) {
+      divList[i].setAttribute('style', `background-color:${color};`)
+    }
+  }
+
+</script>
+
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #div {
+            width: 400px;
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .border {
+            border: 2px solid #000;
+        }
+
+        .background {
+            background-color: red;
+        }
+
+        .color {
+            color: green;
+        }
+
+        .font-size {
+            font-size: 32px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="div" class="border background color font-size">
+        content
+    </div>
+    <div class="active-list" id="active-list"></div>
+    <div class="removed-list" id="removed-list"></div>
+    <button id="delete-button">delete</button>
+    <button id="add-button">add</button>
+
+</body>
+<script>
+    const activeRadioName = 'active-class-radio'
+    const removedRadioName = 'removed-class-radio'
+    const activeList = 'active-list'
+    const removedList = 'removed-list'
+    let removed = []
+    function init() {
+        const div = document.getElementById('div')
+        const activeDiv = document.getElementById(activeList)
+        const removedDiv = document.getElementById(removedList)
+        const activeClassList = div.className.split(' ')
+        let activeHtml = ''
+        for (let i = 0; i < activeClassList.length; i++) {
+            activeHtml += `<input type="radio" name="${activeRadioName}" value="${activeClassList[i]}" >${activeClassList[i]}</input>`
+        }
+        let removedHtml = ''
+        for (let i = 0; i < removed.length; i++) {
+            removedHtml += `<input type="radio" name="${removedRadioName}" value="${removed[i]}" >${removed[i]}</input>`
+        }
+        activeDiv.innerHTML = activeHtml;
+        removedDiv.innerHTML = removedHtml;
+    }
+    init()
+</script>
+<script>
+    const deleteBtn = document.getElementById('delete-button')
+    deleteBtn.onclick = function () {
+        const div = document.getElementById('div')
+        const radios = document.getElementsByName(activeRadioName)
+        for (let i = 0; i < radios.length; i++) {
+            const item = radios[i];
+            if (item.checked) {
+                div.classList.remove(item.value)
+                removed.push(item.value)
+            }
+        }
+        init()
+    }
+    const addBtn = document.getElementById('add-button')
+    addBtn.onclick = function () {
+        const div = document.getElementById('div')
+        const radios = document.getElementsByName(removedRadioName)
+        for (let i = 0; i < radios.length; i++) {
+            const item = radios[i];
+            if (item.checked) {
+                div.classList.add(item.value)
+                removed = removed.filter(r => r !== item.value)
+            }
+        }
+        init()
+    }
+
+</script>
+
+</html>
