@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <button id="add-button">add text</button>
+    <button id="merge-button">merge text</button>
+    <button id="split-button">split text</button>
+    <div id="tips"></div>
+
+    <script>
+        const DIV_ID = 'my-div'
+        const TEXT_1 = 'hello world'
+        const addButton = document.getElementById('add-button')
+        const tipDiv = document.getElementById('tips')
+        addButton.onclick = function () {
+            const div = document.createElement('div')
+            div.id = DIV_ID;
+            const text1 = document.createTextNode(TEXT_1)
+            const text2 = document.createTextNode('你好世界')
+            div.appendChild(text1)
+            div.appendChild(text2)
+            document.body.appendChild(div)
+            tipDiv.innerText = 'text node length: ' + div.childNodes.length;
+        }
+
+        const splitButton = document.getElementById('split-button')
+        splitButton.onclick = function () {
+            const div = document.getElementById(DIV_ID)
+            const textNode = div.firstChild;
+            const newTextNode = textNode.splitText(TEXT_1.length - 2)
+            tipDiv.innerText = 'text node length: ' + div.childNodes.length;
+            console.log(div.childNodes)
+        }
+
+
+        const mergeButton = document.getElementById('merge-button')
+        mergeButton.onclick = function () {
+            const div = document.getElementById(DIV_ID)
+            const textNode = div.firstChild;
+            div.normalize()
+            tipDiv.innerText = 'text node length: ' + div.childNodes.length;
+            console.log(div.childNodes)
+
+        }
+
+    </script>
+</body>
+
+</html>
