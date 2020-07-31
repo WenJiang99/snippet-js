@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="my-id" class="MY-CLASS" title="my-div" my-attr="my-value" style="width: 100px;background-color: green;">
+        hello world
+    </div>
+
+    <script>
+        const div = document.getElementById('my-id')
+        const get = v => div.getAttribute(v);
+        console.log('dot opt:', div.id, div.className, div.title)
+        console.log('getAttribute:', get('id'), get('class'), get('title'))
+
+        console.log('dot style:', div.style, typeof div.style) // object
+        console.log('dot style:', get('style'), typeof get('style')) // string
+
+        const set = (k, v) => div.setAttribute(k, v);
+        set('test-attr', 'test-value')
+        console.log(div['my-attr'], div['test-attr']) // undefined , undefined
+        console.log(get('my-attr'), get('test-attr')) // my-value , test-value
+    </script>
+</body>
+
+</html>
