@@ -1,11 +1,14 @@
-function flatten(arr, result, deep = Infinity) {
+function flatten(arr) {
+  return _flatten(arr)
+}
+function _flatten(arr, result, depth = Infinity) {
   let i = -1;
   result || (result = []);
-  deep = (deep === undefined || deep === null) ? Infinity : deep;
+  depth = (depth == null) ? Infinity : depth;
   while (++i < arr.length) {
     const item = arr[i];
-    if (deep > 0 && isArray(item)) {
-      flatten(item, result, deep - 1)
+    if (depth > 0 && isArray(item)) {
+      _flatten(item, result, depth - 1)
     } else {
       result.push(item)
     }
@@ -20,4 +23,4 @@ const sample = [
   [4, 5, [6, 7, [8, 9], 10], 11],
   12
 ]
-console.log(flatten(sample, []))
+console.log(flatten(sample))
